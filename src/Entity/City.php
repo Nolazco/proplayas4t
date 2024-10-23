@@ -35,9 +35,16 @@ class City
     #[ORM\OneToMany(targetEntity: Profile::class, mappedBy: 'site', orphanRemoval: true)]
     private Collection $profiles;
 
+    /**
+     * @var Collection<int, Node>
+     */
+    #[ORM\OneToMany(targetEntity: Node::class, mappedBy: 'city')]
+    private Collection $nodes;
+
     public function __construct()
     {
         $this->profiles = new ArrayCollection();
+        $this->nodes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -117,6 +124,36 @@ class City
             // set the owning side to null (unless already changed)
             if ($profile->getSite() === $this) {
                 $profile->setSite(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Node>
+     */
+    public function getNodes(): Collection
+    {
+        return $this->nodes;
+    }
+
+    public function addNode(Node $node): static
+    {
+        if (!$this->nodes->contains($node)) {
+            $this->nodes->add($node);
+            $node->setCity($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNode(Node $node): static
+    {
+        if ($this->nodes->removeElement($node)) {
+            // set the owning side to null (unless already changed)
+            if ($node->getCity() === $this) {
+                $node->setCity(null);
             }
         }
 
