@@ -3,12 +3,30 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\ChapterRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Query\Expr\From;
 
 #[ORM\Entity(repositoryClass: ChapterRepository::class)]
-#[ApiResource]
+#[ApiResource(operations: [new Get(), new Post(), new Delete(), new Put(), new Patch()])]
+#[ApiResource(
+    uriTemplate: '/web_series/{id}/chapters',
+    uriVariables: [
+        'id' => new Link(
+            fromClass: WebSerie::class,
+            fromProperty: 'chapters'
+        )
+    ],
+    operations: [new GetCollection()]
+)]
 class Chapter
 {
     #[ORM\Id]
