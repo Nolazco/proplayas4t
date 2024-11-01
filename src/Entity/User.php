@@ -64,6 +64,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: BlogPost::class, mappedBy: 'author', orphanRemoval: true)]
     private Collection $blogPosts;
 
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $status = null;
+
+
     public function __construct()
     {
         $this->blogPosts = new ArrayCollection();
@@ -199,6 +204,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getBlogPosts(): Collection
     {
         return $this->blogPosts;
+    }
+
+    //Add status to schema 
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): static
+    {
+        $this->status = $status;
+        return $this;
     }
 
     public function addBlogPost(BlogPost $blogPost): static

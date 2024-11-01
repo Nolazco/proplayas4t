@@ -55,6 +55,7 @@ final class Version20241029211652 extends AbstractMigration
         $this->addSql('ALTER TABLE profile ADD CONSTRAINT FK_8157AA0F9B6B5FBA FOREIGN KEY (account_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE profile ADD CONSTRAINT FK_8157AA0FF6BD1646 FOREIGN KEY (site_id) REFERENCES city (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE "user" ADD CONSTRAINT FK_8D93D649EA9FDD75 FOREIGN KEY (media_id) REFERENCES media (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('ALTER TABLE "user" ADD COLUMN status VARCHAR(255) DEFAULT NULL');
     }
 
     public function postUp(Schema $schema): void
