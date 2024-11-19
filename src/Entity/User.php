@@ -64,9 +64,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: BlogPost::class, mappedBy: 'author', orphanRemoval: true)]
     private Collection $blogPosts;
 
+    /**
+     * @var Collection<int, Books>
+     */
+    #[ORM\OneToMany(targetEntity: Books::class, mappedBy: 'published_by')]
+    private Collection $books;
+
     public function __construct()
     {
         $this->blogPosts = new ArrayCollection();
+        $this->books = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -217,6 +224,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($blogPost->getAuthor() === $this) {
                 $blogPost->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Books>
+     */
+    public function getBooks(): Collection
+    {
+        return $this->books;
+    }
+
+    public function addBook(Books $book): static
+    {
+        if (!$this->books->contains($book)) {
+            $this->books->add($book);
+            $book->setPublishedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBook(Books $book): static
+    {
+        if ($this->books->removeElement($book)) {
+            // set the owning side to null (unless already changed)
+            if ($book->getPublishedBy() === $this) {
+                $book->setPublishedBy(null);
             }
         }
 
