@@ -53,9 +53,16 @@ class Node
     #[ORM\Column(length: 255)]
     private ?string $logo = null;
 
+    /**
+     * @var Collection<int, Invitations>
+     */
+    #[ORM\OneToMany(targetEntity: Invitations::class, mappedBy: 'node')]
+    private Collection $invitations;
+
     public function __construct()
     {
         $this->members = new ArrayCollection();
+        $this->invitations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -191,6 +198,36 @@ class Node
     public function setLogo(string $logo): static
     {
         $this->logo = $logo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Invitations>
+     */
+    public function getInvitations(): Collection
+    {
+        return $this->invitations;
+    }
+
+    public function addInvitation(Invitations $invitation): static
+    {
+        if (!$this->invitations->contains($invitation)) {
+            $this->invitations->add($invitation);
+            $invitation->setNode($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInvitation(Invitations $invitation): static
+    {
+        if ($this->invitations->removeElement($invitation)) {
+            // set the owning side to null (unless already changed)
+            if ($invitation->getNode() === $this) {
+                $invitation->setNode(null);
+            }
+        }
 
         return $this;
     }
