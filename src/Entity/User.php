@@ -208,6 +208,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->blogPosts;
     }
 
+    //Add status to schema 
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): static
+    {
+        $this->status = $status;
+        return $this;
+    }
+
     public function addBlogPost(BlogPost $blogPost): static
     {
         if (!$this->blogPosts->contains($blogPost)) {
